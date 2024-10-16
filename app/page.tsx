@@ -90,7 +90,8 @@ export default function Home() {
     }
   };
 
-  let get_stored_message = async (sender: string, label: string) => {
+  const get_stored_message = async (sender: string, label: string) => {
+    // Changed to const
     const wallet = new Wallet(process.env.MNEMONIC);
 
     const secretjs = new SecretNetworkClient({
@@ -100,17 +101,19 @@ export default function Home() {
       walletAddress: wallet.address,
     });
 
-    let contractCodeHash =
+    const contractCodeHash =
       "c7f0f3a1fac97b11eecc3737ced7a102bb1dee70da74aa2bf20a38f6943589d5";
-    let contractAddress = "secret1dkkeehr702ysu7p40gttv04cmglt52lavn77jt";
+    const contractAddress = "secret1dkkeehr702ysu7p40gttv04cmglt52lavn77jt";
 
-    let query: any = await secretjs.query.compute.queryContract({
-      contract_address: contractAddress,
-      query: {
-        get_stored_message: { sender: sender },
-      },
-      code_hash: contractCodeHash,
-    });
+    const query: { message: string } =
+      await secretjs.query.compute.queryContract({
+        // Specified type instead of any
+        contract_address: contractAddress,
+        query: {
+          get_stored_message: { sender: sender },
+        },
+        code_hash: contractCodeHash,
+      });
 
     console.log("Raw query result:", query);
 
